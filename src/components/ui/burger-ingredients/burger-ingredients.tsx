@@ -5,6 +5,10 @@ import styles from './burger-ingredients.module.css';
 import { BurgerIngredientsUIProps } from './type';
 import { IngredientsCategory } from '@components';
 
+/**
+ * UI-компонент вкладок и категорий ингредиентов конструктора.
+ * Включает вкладки булки/начинки/соусы и отображение по категориям.
+ */
 export const BurgerIngredientsUI: FC<BurgerIngredientsUIProps> = memo(
   ({
     currentTab,
@@ -19,50 +23,44 @@ export const BurgerIngredientsUI: FC<BurgerIngredientsUIProps> = memo(
     saucesRef,
     onTabClick
   }) => (
-    <>
-      <section className={styles.burger_ingredients}>
-        <nav>
-          <ul className={styles.menu}>
-            <Tab value='bun' active={currentTab === 'bun'} onClick={onTabClick}>
-              Булки
-            </Tab>
-            <Tab
-              value='main'
-              active={currentTab === 'main'}
-              onClick={onTabClick}
-            >
-              Начинки
-            </Tab>
-            <Tab
-              value='sauce'
-              active={currentTab === 'sauce'}
-              onClick={onTabClick}
-            >
-              Соусы
-            </Tab>
-          </ul>
-        </nav>
-        <div className={styles.content}>
-          <IngredientsCategory
-            title='Булки'
-            titleRef={titleBunRef}
-            ingredients={buns}
-            ref={bunsRef}
-          />
-          <IngredientsCategory
-            title='Начинки'
-            titleRef={titleMainRef}
-            ingredients={mains}
-            ref={mainsRef}
-          />
-          <IngredientsCategory
-            title='Соусы'
-            titleRef={titleSaucesRef}
-            ingredients={sauces}
-            ref={saucesRef}
-          />
+    <section className={styles.burger_ingredients}>
+      <nav aria-label='Категории ингредиентов'>
+        <div className={styles.menu}>
+          <Tab value='bun' active={currentTab === 'bun'} onClick={onTabClick}>
+            Булки
+          </Tab>
+          <Tab value='main' active={currentTab === 'main'} onClick={onTabClick}>
+            Начинки
+          </Tab>
+          <Tab
+            value='sauce'
+            active={currentTab === 'sauce'}
+            onClick={onTabClick}
+          >
+            Соусы
+          </Tab>
         </div>
-      </section>
-    </>
+      </nav>
+      <div className={styles.content}>
+        <IngredientsCategory
+          title='Булки'
+          titleRef={titleBunRef}
+          ingredients={buns}
+          ref={bunsRef}
+        />
+        <IngredientsCategory
+          title='Начинки'
+          titleRef={titleMainRef}
+          ingredients={mains}
+          ref={mainsRef}
+        />
+        <IngredientsCategory
+          title='Соусы'
+          titleRef={titleSaucesRef}
+          ingredients={sauces}
+          ref={saucesRef}
+        />
+      </div>
+    </section>
   )
 );
