@@ -10,19 +10,27 @@ import {
 
 import { TBurgerIngredientUIProps } from './type';
 
+/**
+ * Отображает карточку ингредиента в списке конструктора.
+ * Включает цену, изображение, название, счётчик и кнопку "Добавить".
+ */
 export const BurgerIngredientUI: FC<TBurgerIngredientUIProps> = memo(
   ({ ingredient, count, handleAdd, locationState }) => {
     const { image, price, name, _id } = ingredient;
 
     return (
-      <li className={styles.container}>
+      <article className={styles.container}>
         <Link
           className={styles.article}
           to={`/ingredients/${_id}`}
           state={locationState}
         >
-          {count && <Counter count={count} />}
-          <img className={styles.img} src={image} alt='картинка ингредиента.' />
+          {count > 0 && <Counter count={count} />}
+          <img
+            className={styles.img}
+            src={image}
+            alt={`Изображение ингредиента: ${name}`}
+          />
           <div className={`${styles.cost} mt-2 mb-2`}>
             <p className='text text_type_digits-default mr-2'>{price}</p>
             <CurrencyIcon type='primary' />
@@ -34,7 +42,7 @@ export const BurgerIngredientUI: FC<TBurgerIngredientUIProps> = memo(
           onClick={handleAdd}
           extraClass={`${styles.addButton} mt-8`}
         />
-      </li>
+      </article>
     );
   }
 );

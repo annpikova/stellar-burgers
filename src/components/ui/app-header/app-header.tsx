@@ -7,28 +7,59 @@ import {
   Logo,
   ProfileIcon
 } from '@zlden/react-developer-burger-ui-components';
+import { Link, NavLink } from 'react-router-dom';
 
+/**
+ * Компонент шапки приложения.
+ * Отображает навигационное меню с иконками: Конструктор, Лента заказов, Профиль.
+ * Актуализирует активные ссылки в зависимости от текущего маршрута.
+ *
+ * @param {string} userName — имя пользователя для отображения в профиле
+ * @returns {React.ReactElement} UI компонент шапки
+ */
 export const AppHeaderUI: FC<TAppHeaderUIProps> = ({ userName }) => (
   <header className={styles.header}>
-    <nav className={`${styles.menu} p-4`}>
+    <nav className={`${styles.menu} p-4`} aria-label='Главная навигация'>
       <div className={styles.menu_part_left}>
-        <>
-          <BurgerIcon type={'primary'} />
+        <NavLink
+          to='/'
+          className={({ isActive }) =>
+            isActive ? styles.link_active : styles.link
+          }
+        >
+          <BurgerIcon type='primary' />
           <p className='text text_type_main-default ml-2 mr-10'>Конструктор</p>
-        </>
-        <>
-          <ListIcon type={'primary'} />
+        </NavLink>
+
+        <NavLink
+          to='/feed'
+          className={({ isActive }) =>
+            isActive ? styles.link_active : styles.link
+          }
+        >
+          <ListIcon type='primary' />
           <p className='text text_type_main-default ml-2'>Лента заказов</p>
-        </>
+        </NavLink>
       </div>
+
       <div className={styles.logo}>
-        <Logo className='' />
+        <Link to='/'>
+          <Logo className={styles.logo} />
+        </Link>
       </div>
+
       <div className={styles.link_position_last}>
-        <ProfileIcon type={'primary'} />
-        <p className='text text_type_main-default ml-2'>
-          {userName || 'Личный кабинет'}
-        </p>
+        <NavLink
+          to='/profile'
+          className={({ isActive }) =>
+            isActive ? styles.link_active : styles.link
+          }
+        >
+          <ProfileIcon type='primary' />
+          <p className='text text_type_main-default ml-2'>
+            {userName || 'Личный кабинет'}
+          </p>
+        </NavLink>
       </div>
     </nav>
   </header>
