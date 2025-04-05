@@ -51,14 +51,18 @@ export const constructorSlice = createSlice({
     /**
      * Добавление ингредиента в конструктор.
      */
-    addIngredient: (state, action: PayloadAction<TIngredient>) => {
-      const id = nanoid();
-      const payload: TConstructorIngredient = { ...action.payload, id };
-      if (payload.type === 'bun') {
-        state.constructorItems.bun = payload;
-      } else {
-        state.constructorItems.ingredients.push(payload);
-      }
+    addIngredient: {
+      reducer: (state, action: PayloadAction<TConstructorIngredient>) => {
+        const payload = action.payload;
+        if (payload.type === 'bun') {
+          state.constructorItems.bun = payload;
+        } else {
+          state.constructorItems.ingredients.push(payload);
+        }
+      },
+      prepare: (ingredient: TIngredient) => ({
+        payload: { ...ingredient, id: nanoid() }
+      })
     },
 
     /**
