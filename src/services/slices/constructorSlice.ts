@@ -102,6 +102,7 @@ export const constructorSlice = createSlice({
      */
     resetModal: (state) => {
       state.orderModalData = null;
+      state.orderRequest = false;
     }
   },
   extraReducers: (builder) => {
