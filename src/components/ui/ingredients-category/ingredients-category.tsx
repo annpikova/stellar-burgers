@@ -21,7 +21,7 @@ export const IngredientsCategoryUI = forwardRef<
       aria-label={`Список ингредиентов категории ${title}`}
     >
       {ingredients.map((ingredient) => (
-        <li key={ingredient._id} role='listitem'>
+        <li key={ingredient._id} role='listitem' data-cy={ingredient._id}>
           <BurgerIngredient
             ingredient={ingredient}
             count={ingredientsCounters[ingredient._id]}

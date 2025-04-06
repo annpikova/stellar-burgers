@@ -16,9 +16,12 @@ module.exports = {
         test: /\.(ts)x?$/,
         exclude: /node_modules/,
         use: {
-          loader: 'ts-loader'
+          loader: 'ts-loader',
+          options: {
+            transpileOnly: true
+          }
         }
-      },
+      },      
       {
         test: /\.css$/,
         exclude: /\.module\.css$/,
@@ -89,6 +92,7 @@ module.exports = {
     static: path.join(__dirname, './dist'),
     compress: true,
     historyApiFallback: true,
-    port: 4000
+    port: 4000,
+    open: true
   }
 };
