@@ -15,57 +15,50 @@ import {
 
 /* ---------------------------- Async Thunks ---------------------------- */
 
-/**
- * Регистрация пользователя.
- */
 export const registerUser = createAsyncThunk(
   'user/registerUser',
-  async (data: TRegisterData) => await registerUserApi(data)
+  async (data: TRegisterData) => {
+    const response = await registerUserApi(data);
+    setCookie('accessToken', response.accessToken);
+    localStorage.setItem('accessToken', response.accessToken);
+    localStorage.setItem('refreshToken', response.refreshToken);
+    return response;
+  }
 );
 
-/**
- * Авторизация пользователя.
- */
 export const loginUser = createAsyncThunk(
   'user/loginUser',
-  async (data: TLoginData) => await loginUserApi(data)
+  async (data: TLoginData) => {
+    const response = await loginUserApi(data);
+    setCookie('accessToken', response.accessToken);
+    localStorage.setItem('accessToken', response.accessToken);
+    localStorage.setItem('refreshToken', response.refreshToken);
+    return response;
+  }
 );
 
-/**
- * Выход пользователя из аккаунта.
- */
-export const logoutUser = createAsyncThunk(
-  'user/logoutUser',
-  async () => await logoutApi()
-);
+export const logoutUser = createAsyncThunk('user/logoutUser', async () => {
+  const response = await logoutApi();
+  deleteCookie('accessToken');
+  localStorage.removeItem('refreshToken');
+  return response;
+});
 
-/**
- * Обновление данных пользователя.
- */
 export const updateUser = createAsyncThunk(
   'user/updateUser',
   async (data: TRegisterData) => await updateUserApi(data)
 );
 
-/**
- * Получение всех заказов пользователя.
- */
 export const getAllUserOrders = createAsyncThunk(
   'user/getAllUserOrders',
   async () => await getOrdersApi()
 );
 
-/**
- * Получение заказа по номеру.
- */
 export const getOrderByNumber = createAsyncThunk(
   'user/getOrderByNumber',
   async (number: number) => await getOrderByNumberApi(number)
 );
 
-/**
- * Проверка, авторизован ли пользователь.
- */
 export const checkIsUserLogged = createAsyncThunk(
   'user/checkIsUserLogged',
   async () => await getUserApi()
@@ -73,9 +66,6 @@ export const checkIsUserLogged = createAsyncThunk(
 
 /* ------------------------------ State ------------------------------ */
 
-/**
- * Состояние пользователя в приложении.
- */
 export type TUserState = {
   userInfo: TUser;
   isLoggedIn: boolean;
@@ -85,9 +75,6 @@ export type TUserState = {
   allUserOrders: TOrder[];
 };
 
-/**
- * Начальное состояние.
- */
 export const initialState: TUserState = {
   userInfo: { email: '', name: '' },
   isLoggedIn: false,
@@ -104,7 +91,7 @@ const userSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    /* --- Регистрация --- */
+    // Регистрация
     builder
       .addCase(registerUser.pending, (state) => {
         state.isLoading = true;
@@ -112,8 +99,6 @@ const userSlice = createSlice({
       .addCase(registerUser.fulfilled, (state, action) => {
         state.isLoading = false;
         state.userInfo = action.payload.user;
-        setCookie('accessToken', action.payload.accessToken);
-        localStorage.setItem('accessToken', action.payload.accessToken);
         state.isLoggedIn = true;
       })
       .addCase(registerUser.rejected, (state, action) => {
@@ -121,7 +106,7 @@ const userSlice = createSlice({
         state.isLoading = false;
       });
 
-    /* --- Вход --- */
+    // Вход
     builder
       .addCase(loginUser.pending, (state) => {
         state.isLoading = true;
@@ -129,8 +114,6 @@ const userSlice = createSlice({
       .addCase(loginUser.fulfilled, (state, action) => {
         state.isLoading = false;
         state.userInfo = action.payload.user;
-        setCookie('accessToken', action.payload.accessToken);
-        localStorage.setItem('accessToken', action.payload.accessToken);
         state.isLoggedIn = true;
       })
       .addCase(loginUser.rejected, (state, action) => {
@@ -138,7 +121,7 @@ const userSlice = createSlice({
         state.isLoading = false;
       });
 
-    /* --- Выход --- */
+    // Выход
     builder
       .addCase(logoutUser.pending, (state) => {
         state.isLoading = true;
@@ -146,14 +129,14 @@ const userSlice = createSlice({
       .addCase(logoutUser.fulfilled, (state) => {
         state.isLoading = false;
         state.userInfo = { email: '', name: '' };
-        deleteCookie('accessToken');
         state.isLoggedIn = false;
       })
       .addCase(logoutUser.rejected, (state, action) => {
         state.errorMessage = action.error.message || 'Ошибка выхода';
+        state.isLoading = false;
       });
 
-    /* --- Обновление профиля --- */
+    // Обновление профиля
     builder
       .addCase(updateUser.pending, (state) => {
         state.isLoading = true;
@@ -166,10 +149,14 @@ const userSlice = createSlice({
       .addCase(updateUser.rejected, (state, action) => {
         state.errorMessage =
           action.error.message || 'Ошибка обновления профиля';
+        state.isLoading = false;
       });
 
-    /* --- Проверка логина --- */
+    // Проверка логина
     builder
+      .addCase(checkIsUserLogged.pending, (state) => {
+        state.isLoading = true;
+      })
       .addCase(checkIsUserLogged.fulfilled, (state, action) => {
         state.userInfo = action.payload.user;
         state.isLoggedIn = true;
@@ -180,7 +167,7 @@ const userSlice = createSlice({
         state.isLoading = false;
       });
 
-    /* --- Заказы пользователя --- */
+    // Заказы пользователя
     builder
       .addCase(getAllUserOrders.pending, (state) => {
         state.isLoading = true;

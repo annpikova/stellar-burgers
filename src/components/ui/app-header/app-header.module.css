@@ -1,6 +1,7 @@
 .header {
   background-color: var(--background);
 }
+
 .menu {
   display: flex;
   align-items: center;
@@ -14,15 +15,19 @@
   flex-basis: 35%;
 }
 
-.link {
+.link,
+.link_active {
   display: flex;
+  align-items: center;
   text-decoration: none;
+  line-height: 1;
+  padding: 4px 8px;
+  transition: color 0.2s ease;
   color: var(--text-inactive-color);
 }
 
 .link_active {
   color: var(--text-primary-color);
-  text-decoration: none;
 }
 
 .link_position_last {

@@ -39,7 +39,6 @@ const App = () => {
   useEffect(() => {
     dispatch(checkIsUserLogged());
     dispatch(fetchIngredients());
-    dispatch(fetchFeeds());
   }, [dispatch]);
 
   return (
