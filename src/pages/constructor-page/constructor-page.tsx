@@ -12,8 +12,9 @@ import { Preloader } from '../../components/ui';
  * Если данные ингредиентов ещё загружаются — показывает прелоадер.
  */
 export const ConstructorPage: FC = () => {
+  // Получаем флаг загрузки ингредиентов из Redux-хранилища
   const isIngredientsLoading = useSelector(
-    (state) => state.ingredients.isIngredientsLoading
+    (state) => state.ingredients.isLoading
   );
 
   // Показываем прелоадер, пока ингредиенты загружаются
@@ -21,6 +22,7 @@ export const ConstructorPage: FC = () => {
     return <Preloader />;
   }
 
+  // Отображаем страницу конструктора после загрузки ингредиентов
   return (
     <main className={styles.containerMain}>
       <h1

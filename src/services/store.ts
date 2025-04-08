@@ -1,4 +1,4 @@
-import { configureStore } from '@reduxjs/toolkit';
+import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import {
   TypedUseSelectorHook,
   useDispatch as useReduxDispatch,
@@ -11,17 +11,27 @@ import userReducer from './slices/userSlice';
 import constructorReducer from './slices/constructorSlice';
 import orderReducer from './slices/orderSlice';
 
+/* ------------------------- Root Reducer ------------------------- */
+
 /**
- * Создание Redux-хранилища с включёнными devTools в режиме разработки.
+ * Корневой редьюсер, объединяющий все слайсы.
+ * Экспортируется отдельно для unit-тестов.
+ */
+export const rootReducer = combineReducers({
+  ingredients: ingredientsReducer,
+  feeds: feedsReducer,
+  user: userReducer,
+  burgerConstructor: constructorReducer,
+  order: orderReducer
+});
+
+/* ---------------------- Redux Store ---------------------- */
+
+/**
+ * Конфигурация Redux-хранилища.
  */
 const store = configureStore({
-  reducer: {
-    ingredients: ingredientsReducer,
-    feeds: feedsReducer,
-    user: userReducer,
-    burgerConstructor: constructorReducer,
-    order: orderReducer
-  },
+  reducer: rootReducer,
   devTools: process.env.NODE_ENV !== 'production'
 });
 
@@ -54,5 +64,7 @@ export const useDispatch: () => AppDispatch = () =>
  * Кастомный useSelector с типом состояния.
  */
 export const useSelector: TypedUseSelectorHook<RootState> = useReduxSelector;
+
+/* --------------------------- Экспорт --------------------------- */
 
 export default store;

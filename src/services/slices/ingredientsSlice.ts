@@ -7,7 +7,8 @@ import { getIngredientsApi } from '@api';
  */
 export type TIngredientsState = {
   ingredientsData: TIngredient[];
-  isIngredientsLoading: boolean;
+  isLoading: boolean;
+  errorMessage: string | null;
 };
 
 /**
@@ -15,7 +16,8 @@ export type TIngredientsState = {
  */
 export const initialState: TIngredientsState = {
   ingredientsData: [],
-  isIngredientsLoading: false
+  isLoading: false,
+  errorMessage: null
 };
 
 /**
@@ -39,11 +41,16 @@ const ingredientsSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(fetchIngredients.pending, (state) => {
-        state.isIngredientsLoading = true;
+        state.isLoading = true;
+        state.errorMessage = null;
       })
       .addCase(fetchIngredients.fulfilled, (state, action) => {
-        state.isIngredientsLoading = false;
+        state.isLoading = false;
         state.ingredientsData = action.payload;
+      })
+      .addCase(fetchIngredients.rejected, (state, action) => {
+        state.isLoading = false;
+        state.errorMessage = action.error.message || 'Ошибка загрузки';
       });
   }
 });
