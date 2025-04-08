@@ -25,7 +25,12 @@ export const IngredientDetailsUI: FC<IngredientDetailsUIProps> = memo(
           alt={`Изображение ингредиента: ${name}`}
           src={image_large}
         />
-        <h3 className='text text_type_main-medium mt-2 mb-4'>{name}</h3>
+        <h3
+          className='text text_type_main-medium mt-2 mb-4'
+          data-cy='ingredient-name'
+        >
+          {name}
+        </h3>
         <ul
           className={`${styles.nutritional_values} text_type_main-default`}
           role='list'

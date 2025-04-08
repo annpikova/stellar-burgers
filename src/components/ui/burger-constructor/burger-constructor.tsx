@@ -43,7 +43,10 @@ export const BurgerConstructorUI: FC<BurgerConstructorUIProps> = ({
   return (
     <section className={styles.burger_constructor}>
       {hasBun ? (
-        <div className={`${styles.element} mb-4 mr-4`}>
+        <div
+          className={`${styles.element} mb-4 mr-4`}
+          data-cy='constructor-bun-top' // ← обёртка с data-cy
+        >
           <ConstructorElement
             type='top'
             isLocked
@@ -60,12 +63,13 @@ export const BurgerConstructorUI: FC<BurgerConstructorUIProps> = ({
         {hasIngredients ? (
           constructorItems.ingredients.map(
             (item: TConstructorIngredient, index: number) => (
-              <BurgerConstructorElement
-                ingredient={item}
-                index={index}
-                totalItems={constructorItems.ingredients.length}
-                key={item.id}
-              />
+              <li key={item.id} data-cy='constructor-filling'>
+                <BurgerConstructorElement
+                  ingredient={item}
+                  index={index}
+                  totalItems={constructorItems.ingredients.length}
+                />
+              </li>
             )
           )
         ) : (
@@ -74,7 +78,10 @@ export const BurgerConstructorUI: FC<BurgerConstructorUIProps> = ({
       </ul>
 
       {hasBun ? (
-        <div className={`${styles.element} mt-4 mr-4`}>
+        <div
+          className={`${styles.element} mt-4 mr-4`}
+          data-cy='constructor-bun-bottom'
+        >
           <ConstructorElement
             type='bottom'
             isLocked
@@ -108,8 +115,11 @@ export const BurgerConstructorUI: FC<BurgerConstructorUIProps> = ({
         </Modal>
       )}
 
-      {orderModalData && !orderRequest && (
-        <Modal onClose={closeOrderModal} title='Детали заказа'>
+      {orderModalData && (
+        <Modal
+          onClose={closeOrderModal}
+          title={orderRequest ? 'Оформляем заказ...' : ''}
+        >
           <OrderDetailsUI orderNumber={orderModalData.number} />
         </Modal>
       )}
